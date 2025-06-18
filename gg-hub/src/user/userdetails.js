@@ -2,7 +2,6 @@
  * @type {IAM User Details}
  */
 
-
 /**
  * @name test
  * @var {Access Key}: AKIATVCCN7ZQ6HUHRUGF
