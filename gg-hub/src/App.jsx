@@ -24,7 +24,7 @@ function App() {
                 </p>
               </div>
             </a>
-            <a href="#contact">Contact</a>
+            <a href="#contact">Login</a>
           </div>
         </div>
       </nav>
