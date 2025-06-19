@@ -1,0 +1,117 @@
+/* Navigation Header */
+.nav {
+  background: var(--darker-bg);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  background: rgba(2, 6, 23, 0.95);
+  width: 100%;
+}
+
+.nav-container {
+  width: 100%;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  cursor: pointer;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-weight: 500;
+  position: relative;
+}
+
+.nav-links a:hover {
+  color: white;
+}
+
+/* About Tooltip */
+.about-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 0.75rem;
+  width: 280px;
+  padding: 1rem;
+  background: rgba(30, 41, 59, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid white;
+  border-radius: 0.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  z-index: 1001;
+  font-size: 0.875rem;
+}
+
+/* Adjust position on smaller screens */
+@media (max-width: 1024px) {
+  .about-tooltip {
+    left: auto;
+    right: 0;
+    transform: none;
+  }
+  
+  .about-tooltip::before {
+    left: auto;
+    right: 20px;
+    transform: rotate(45deg);
+  }
+}
+
+.about-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  background: rgba(30, 41, 59, 0.95);
+  border-left: 1px solid white;
+  border-top: 1px solid white;
+}
+
+.nav-links a:nth-child(2):hover .about-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.about-tooltip p {
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin: 0;
+  text-align: left;
+  font-weight: normal;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+}

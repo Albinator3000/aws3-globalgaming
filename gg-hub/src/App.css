@@ -1,154 +1,10 @@
-/* CSS Variables for GlobalGaming Theme */
-:root {
-  --primary-color: #7c3aed;
-  --secondary-color: #f59e0b;
-  --dark-bg: #0f172a;
-  --darker-bg: #020617;
-  --card-bg: #1e293b;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --border-color: #334155;
-}
+/* Import all CSS modules */
+@import './CSS/global.css';
+@import './CSS/nav.css';
+@import './CSS/ivs.css';
+@import './CSS/chat.css';
 
-/* Global Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  background: var(--dark-bg);
-  color: var(--text-primary);
-  line-height: 1.6;
-}
-
-#root {
-  width: 100vw;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Navigation Header */
-.nav {
-  background: var(--darker-bg);
-  border-bottom: 1px solid var(--border-color);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  backdrop-filter: blur(10px);
-  background: rgba(2, 6, 23, 0.95);
-  width: 100%;
-}
-
-.nav-container {
-  width: 100%;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo-text {
-  font-size: 1.5rem;
-  font-weight: bold;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  cursor: pointer;
-}
-
-.nav-links {
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-}
-
-.nav-links a {
-  color: var(--text-secondary);
-  text-decoration: none;
-  transition: color 0.3s ease;
-  font-weight: 500;
-  position: relative;
-}
-
-.nav-links a:hover {
-  color: white;
-}
-
-/* About Tooltip */
-.about-tooltip {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-top: 0.75rem;
-  width: 280px;
-  padding: 1rem;
-  background: rgba(30, 41, 59, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid white;
-  border-radius: 0.5rem;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-  pointer-events: none;
-  z-index: 1001;
-  font-size: 0.875rem;
-}
-
-/* Adjust position on smaller screens */
-@media (max-width: 1024px) {
-  .about-tooltip {
-    left: auto;
-    right: 0;
-    transform: none;
-  }
-  
-  .about-tooltip::before {
-    left: auto;
-    right: 20px;
-    transform: rotate(45deg);
-  }
-}
-
-.about-tooltip::before {
-  content: '';
-  position: absolute;
-  top: -6px;
-  left: 50%;
-  transform: translateX(-50%) rotate(45deg);
-  width: 12px;
-  height: 12px;
-  background: rgba(30, 41, 59, 0.95);
-  border-left: 1px solid white;
-  border-top: 1px solid white;
-}
-
-.nav-links a:nth-child(2):hover .about-tooltip {
-  opacity: 1;
-  visibility: visible;
-}
-
-.about-tooltip p {
-  color: var(--text-primary);
-  font-size: 0.875rem;
-  line-height: 1.4;
-  margin: 0;
-  text-align: left;
-  font-weight: normal;
-}
-
-/* Main Container */
+/* Main Container for Body */
 .main-container {
   flex: 1;
   width: 100%;
@@ -158,17 +14,6 @@ body {
   align-items: center;
   justify-content: center;
   text-align: center;
-}
-
-/* Gradient Title */
-.gradient-title {
-  font-size: 3.2em;
-  line-height: 1.1;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 1rem;
 }
 
 /* Logo Styles */
@@ -202,64 +47,6 @@ body {
   }
 }
 
-/* Card Styles */
-.card {
-  padding: 2em;
-  background: var(--card-bg);
-  border-radius: 1rem;
-  border: 1px solid var(--border-color);
-  margin: 2rem auto;
-  width: 90%;
-  max-width: 600px;
-  transition: all 0.3s ease;
-}
-
-.card:hover {
-  border-color: var(--primary-color);
-  transform: translateY(-2px);
-}
-
-.card p {
-  margin-top: 1.5rem;
-  color: var(--text-secondary);
-}
-
-.card code {
-  background: var(--dark-bg);
-  padding: 0.2rem 0.4rem;
-  border-radius: 0.25rem;
-  font-family: 'Consolas', 'Monaco', monospace;
-}
-
-/* Purple Button Style */
-.btn-primary {
-  background: var(--primary-color);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-  background: #6d28d9;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-}
-
-.btn-primary:focus,
-.btn-primary:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
 /* Read the docs text */
 .read-the-docs {
   color: var(--text-secondary);
@@ -268,14 +55,6 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .nav-links {
-    display: none;
-  }
-  
-  .gradient-title {
-    font-size: 2.5em;
-  }
-  
   .main-container {
     padding: 1rem;
   }
