@@ -5,7 +5,7 @@ const LiveChat = () => {
     {
       id: 1,
       username: "StreamMaster",
-      content: "Welcome to GlobalGaming! 🎮",
+      content: "Welcome to GlobalGaming!",
       timestamp: new Date(),
       badges: ["mod"],
       isSystem: true
@@ -34,12 +34,12 @@ const LiveChat = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       const demoMessages = [
-        "This is so exciting! 🔥",
+        "This is so exciting!",
         "Great gameplay!",
         "When does the next match start?",
         "The graphics are incredible",
         "Go team blue!",
-        "This player is insane! 🎯",
+        "This player is insane!",
         "Best stream on the platform",
         "Love the camera angles",
         "Who's your favorite player?",
@@ -155,9 +155,9 @@ const LiveChat = () => {
           <button 
             type="button" 
             className="chat-emoji-btn"
-            onClick={() => setCurrentMessage(prev => prev + " 🎮")}
+            onClick={() => setCurrentMessage(prev => prev + "🔥")}
           >
-            😊
+            🔥
           </button>
           <button type="submit" className="chat-send-btn" disabled={!currentMessage.trim()}>
             ➤

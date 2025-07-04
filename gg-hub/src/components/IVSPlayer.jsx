@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 
 const IVSPlayer = ({ 
   playbackUrl = "https://6376322642cf.us-west-2.playback.live-video.net/api/video/v1/us-west-2.251394915937.channel.aVHZaA2R5mCI.m3u8",
-  autoplay = true 
+  autoplay = true,
+  onStatusChange = () => {} // Callback to pass status to parent
 }) => {
   const videoRef = useRef(null);
   const playerRef = useRef(null);
@@ -12,6 +13,11 @@ const IVSPlayer = ({
   const [volume, setVolume] = useState(0.5);
   const [isMuted, setIsMuted] = useState(false);
   const [error, setError] = useState(null);
+
+  // Pass status changes to parent component
+  useEffect(() => {
+    onStatusChange({ isLive, isLoading, error });
+  }, [isLive, isLoading, error, onStatusChange]);
 
   useEffect(() => {
     const initializePlayer = async () => {
@@ -239,12 +245,6 @@ const IVSPlayer = ({
           preload="none" // Don't preload to avoid conflicts
           style={{ width: '100%', height: '100%' }}
         />
-        
-        {/* Status Indicator */}
-        <div className={`ivs-status ${isLive ? 'live' : 'offline'}`}>
-          <div className="ivs-status-dot"></div>
-          {isLive ? 'LIVE' : 'OFFLINE'}
-        </div>
 
         {/* Loading Indicator */}
         {isLoading && (
@@ -264,7 +264,7 @@ const IVSPlayer = ({
         {/* Custom Controls */}
         <div className="ivs-controls">
           <button className="ivs-play-btn" onClick={togglePlayPause}>
-            {isPlaying ? '⏸️' : '▶️'}
+            {isPlaying ? '⏸' : '▶'}
           </button>
           
           <div className="ivs-progress">
@@ -273,7 +273,7 @@ const IVSPlayer = ({
           
           <div className="ivs-volume-control">
             <button className="ivs-volume-btn" onClick={toggleMute}>
-              {isMuted || volume === 0 ? '🔇' : volume < 0.5 ? '🔉' : '🔊'}
+              {isMuted || volume === 0 ? 'M' : volume < 0.5 ? 'V' : 'V+'}
             </button>
             <input
               type="range"

@@ -2,18 +2,18 @@
 .ivs-container {
   position: relative;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  background: var(--card-bg);
-  border-radius: 1rem;
-  border: 1px solid var(--border-color);
+  max-width: 100%;
+  margin: 0;
+  background: transparent;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
   overflow: hidden;
   transition: all 0.3s ease;
 }
 
 .ivs-container:hover {
-  border-color: var(--primary-color);
-  box-shadow: 0 8px 32px rgba(124, 58, 237, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .ivs-player {
@@ -22,6 +22,8 @@
   padding-bottom: 56.25%; /* 16:9 aspect ratio */
   position: relative;
   background: #000;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .ivs-player video {
@@ -52,8 +54,9 @@
 }
 
 .ivs-play-btn {
-  background: var(--primary-color);
-  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -63,10 +66,11 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  font-size: 14px;
 }
 
 .ivs-play-btn:hover {
-  background: #6d28d9;
+  background: rgba(255, 255, 255, 0.3);
   transform: scale(1.1);
 }
 
@@ -81,7 +85,7 @@
 
 .ivs-progress-bar {
   height: 100%;
-  background: var(--primary-color);
+  background: rgba(255, 255, 255, 0.8);
   width: 0%;
   transition: width 0.1s ease;
 }
@@ -93,17 +97,19 @@
 }
 
 .ivs-volume-btn {
-  background: none;
-  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
   cursor: pointer;
   padding: 0.5rem;
-  border-radius: 0.25rem;
-  transition: background 0.3s ease;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-size: 14px;
 }
 
 .ivs-volume-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .ivs-volume-slider {
@@ -116,56 +122,24 @@
 }
 
 .ivs-fullscreen-btn {
-  background: none;
-  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   color: white;
   cursor: pointer;
   padding: 0.5rem;
-  border-radius: 0.25rem;
-  transition: background 0.3s ease;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-size: 14px;
 }
 
 .ivs-fullscreen-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.3);
 }
 
+/* Remove the old status indicator from video */
 .ivs-status {
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 0.5rem 1rem;
-  border-radius: 1rem;
-  color: white;
-  font-size: 0.875rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.ivs-status.live {
-  background: rgba(220, 38, 38, 0.9);
-}
-
-.ivs-status.offline {
-  background: rgba(107, 114, 128, 0.9);
-}
-
-.ivs-status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: currentColor;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+  display: none;
 }
 
 .ivs-loading {
@@ -178,13 +152,14 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-family: 'Inter', sans-serif;
 }
 
 .ivs-loading-spinner {
   width: 24px;
   height: 24px;
   border: 3px solid rgba(255, 255, 255, 0.3);
-  border-top: 3px solid var(--primary-color);
+  border-top: 3px solid rgba(255, 255, 255, 0.8);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -203,10 +178,5 @@
   
   .ivs-volume-control {
     display: none;
-  }
-  
-  .ivs-status {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.75rem;
   }
 }
