@@ -39,7 +39,7 @@ function App() {
           <div className="stream-section">
             {/* Stream Title Header */}
             <div className="stream-header">
-              <h1 className="stream-title">GG Walkalong Demo w/ ophera + AWS</h1>
+              <h1 className="stream-title">GG Walkalong Demo w/ @ophera + AWS</h1>
               <div className={`live-indicator ${streamStatus.isLive ? 'live' : 'offline'}`}>
                 <div className="live-dot"></div>
                 <span>{streamStatus.isLoading ? 'connecting' : streamStatus.isLive ? 'live' : 'offline'}</span>
