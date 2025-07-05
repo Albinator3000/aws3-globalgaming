@@ -80,13 +80,14 @@
 }
 
 .chat-message.own-message {
-  background: rgba(124, 58, 237, 0.2);
-  border-color: rgba(124, 58, 237, 0.3);
+  background: rgba(84, 61, 235, 0.1);
+  border-color: rgba(84, 61, 235, 0.1);
   margin-left: 1rem;
 }
 
 .chat-message.own-message:hover {
-  background: rgba(124, 58, 237, 0.3);
+  background: rgba(84, 61, 235, 0.2);
+  border-color: rgba(84, 61, 235, 0.2);
 }
 
 .chat-message-header {
@@ -195,7 +196,7 @@
 }
 
 .chat-send-btn {
-  background: linear-gradient(135deg, var(--primary-color), #6d28d9);
+  background: linear-gradient(135deg, var(--primary-color), rgba(84, 61, 235, 0.1));
   border: none;
   border-radius: 12px;
   padding: 0.875rem 1rem;
@@ -213,7 +214,7 @@
 
 .chat-send-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
+  box-shadow: 0 6px 20px rgba(84, 61, 235, 0.1);;
 }
 
 .chat-send-btn:disabled {

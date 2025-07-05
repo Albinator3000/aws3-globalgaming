@@ -192,9 +192,9 @@
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   overflow: hidden;
-  height: 500px;
-  max-height: 500px;
-  min-height: 500px; /* Fixed height to prevent layout shifts */
+  height: 525px;
+  max-height: 525px;
+  min-height: 525px; /* Fixed height to prevent layout shifts */
   flex-shrink: 0;
   position: relative; /* Contain the chat */
 }
