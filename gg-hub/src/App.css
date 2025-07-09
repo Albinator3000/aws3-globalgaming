@@ -3,6 +3,7 @@
 @import './CSS/nav.css';
 @import './CSS/ivs.css';
 @import './CSS/chat.css';
+@import './CSS/transcript.css';
 
 /* Main Container */
 .main-container {

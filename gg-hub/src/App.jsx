@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import IVSPlayer from './components/IVSPlayer'
 import LiveChat from './components/LiveChat'
+import TranscriptViewer from './components/TranscriptViewer';
 
 function App() {
   const [streamStatus, setStreamStatus] = useState({
