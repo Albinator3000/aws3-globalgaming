@@ -1,3 +1,4 @@
+// src/App.jsx - Updated to pass stream status to chat
 import { useState, useCallback } from 'react'
 import './App.css'
 import IVSPlayer from './components/IVSPlayer'
@@ -12,12 +13,14 @@ function App() {
     error: null
   });
 
-  // Your stream URL from the ivsstreamdetails.js file
+  // Your stream URL and ID from the ivsstreamdetails.js file
   const streamUrl = "https://6376322642cf.us-west-2.playback.live-video.net/api/video/v1/us-west-2.251394915937.channel.aVHZaA2R5mCI.m3u8";
+  const streamId = "aVHZaA2R5mCI"; // Extract channel ID from your ARN for use as stream identifier
 
   // Wrap in useCallback to prevent recreation on every render
   const handleStatusChange = useCallback((status) => {
     setStreamStatus(status);
+    console.log("🔄 Stream status changed:", status);
   }, []);
 
   const renderCurrentPage = () => {
@@ -58,33 +61,42 @@ function App() {
         {/* Stream Controls Bar */}
         <div className="stream-controls">
           <div className="controls-left">
-            <span>Mute Button using favicon</span>
-            <span>Volume: volume bar</span>
-            <span>Live Bitrate: # fps</span>
+            <span>Stream ID: {streamId}</span>
+            <span>Chat: Session-based DynamoDB</span>
+            <span>Status: {streamStatus.isLive ? '🟢 Live' : '🔴 Offline'}</span>
+            {streamStatus.isLive && (
+              <span>🎬 Session Active</span>
+            )}
           </div>
         </div>
 
         {/* Stream Details Dropdown */}
         <div className="stream-details">
           <div className="dropdown-header">
-            <span>Stream Details dropdown</span>
+            <span>Stream Details • Messages cleared when offline</span>
           </div>
         </div>
       </div>
       
-      {/* Right Side - Chat */}
+      {/* Right Side - Chat with session management */}
       <div className="chat-section">
         <div className="chat-header-custom">
           <h2 className="chat-title-custom">Chat</h2>
         </div>
         <div className="chat-wrapper">
-          <LiveChat />
+          <LiveChat 
+            streamId={streamId} 
+            isLive={streamStatus.isLive}
+          />
         </div>
 
         {/* Bottom Section */}
         <div className="bottom-section">
           <div className="accolades-text">
-            accolades for attending the stream
+            {streamStatus.isLive 
+              ? "🎮 Session-based chat • Messages saved per stream session"
+              : "📺 Stream offline • Chat will appear when live"
+            }
           </div>
         </div>
       </div>
@@ -151,7 +163,7 @@ function App() {
     <div className="about-page">
       <div className="page-header">
         <h1 className="page-title">🎮 About GlobalGaming</h1>
-        <p className="page-description">Building the future of esports streaming</p>
+        <p className="page-description">Building the future of esports streaming with session-based chat</p>
       </div>
       
       <div className="about-content">
@@ -168,19 +180,44 @@ function App() {
           <h2>Technology</h2>
           <p>
             Built with cutting-edge technology including Amazon IVS for ultra-low latency 
-            streaming (3-5 second delay), React for responsive user interfaces, and AWS 
-            infrastructure for global scalability.
+            streaming (3-5 second delay), React for responsive user interfaces, AWS DynamoDB 
+            for session-based chat storage, and AWS infrastructure for global scalability.
           </p>
         </div>
         
         <div className="about-section">
-          <h2>Features</h2>
+          <h2>Chat Features</h2>
+          <ul>
+            <li>🎬 Session-based messaging - each stream gets its own chat session</li>
+            <li>💾 Persistent storage in DynamoDB with automatic TTL cleanup</li>
+            <li>🔴 Real-time chat only when stream is live</li>
+            <li>📱 Mobile-responsive design with smooth animations</li>
+            <li>🏷️ User badges and role management</li>
+            <li>🌍 Multi-language support ready</li>
+          </ul>
+        </div>
+
+        <div className="about-section">
+          <h2>Stream Features</h2>
           <ul>
             <li>Ultra-low latency streaming (3-5 seconds)</li>
-            <li>Real-time chat interaction</li>
-            <li>Multi-language support</li>
-            <li>Automatic transcript generation</li>
-            <li>Mobile-responsive design</li>
+            <li>Automatic quality adaptation</li>
+            <li>Smart error recovery and reconnection</li>
+            <li>Real-time viewer count and engagement metrics</li>
+            <li>Scalable AWS infrastructure</li>
+          </ul>
+        </div>
+
+        <div className="about-section">
+          <h2>Database Schema</h2>
+          <p>
+            Chat messages are stored in DynamoDB table: <strong>GlobalGaming-LiveChat</strong>
+          </p>
+          <ul>
+            <li><strong>Partition Key:</strong> StreamId (String) - Groups messages by stream</li>
+            <li><strong>Sort Key:</strong> MessageId (String) - Unique message identifier</li>
+            <li><strong>Session Tracking:</strong> SessionId field tracks individual stream sessions</li>
+            <li><strong>Auto Cleanup:</strong> TTL automatically removes messages after 7 days</li>
           </ul>
         </div>
       </div>
