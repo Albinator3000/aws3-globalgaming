@@ -65,7 +65,7 @@ function App() {
             <span>Chat: Session-based DynamoDB</span>
             <span>Status: {streamStatus.isLive ? '🟢 Live' : '🔴 Offline'}</span>
             {streamStatus.isLive && (
-              <span>🎬 Session Active</span>
+              <span>Session Active</span>
             )}
           </div>
         </div>
@@ -94,8 +94,8 @@ function App() {
         <div className="bottom-section">
           <div className="accolades-text">
             {streamStatus.isLive 
-              ? "🎮 Session-based chat • Messages saved per stream session"
-              : "📺 Stream offline • Chat will appear when live"
+              ? "Session-based chat • Messages saved per stream session"
+              : "Stream offline • Chat will appear when live"
             }
           </div>
         </div>
