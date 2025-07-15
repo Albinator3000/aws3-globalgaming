@@ -1,8 +1,8 @@
-// src/components/LiveChat.jsx - Improved with session management
+// src/components/LiveChat.jsx - Final version with comment tracking
 import { useState, useEffect, useRef } from 'react';
 import ChatService from '../services/chatService';
 
-const LiveChat = ({ streamId = "aVHZaA2R5mCI", isLive = false }) => {
+const LiveChat = ({ streamId = "aVHZaA2R5mCI", isLive = false, onUserComment = () => {} }) => {
   const [messages, setMessages] = useState([]);
   const [currentMessage, setCurrentMessage] = useState("");
   const [onlineCount, setOnlineCount] = useState(42);
@@ -219,6 +219,9 @@ const LiveChat = ({ streamId = "aVHZaA2R5mCI", isLive = false }) => {
         ...prev,
         totalMessages: prev.totalMessages + 1
       }));
+
+      // Notify parent component about user comment for badge system
+      onUserComment();
       
       console.log("✅ User message saved successfully");
       
@@ -235,6 +238,9 @@ const LiveChat = ({ streamId = "aVHZaA2R5mCI", isLive = false }) => {
       });
       
       setCurrentMessage("");
+      
+      // Still notify parent for badge system
+      onUserComment();
       
       // Show error briefly
       setError("Message sent but not saved to database");

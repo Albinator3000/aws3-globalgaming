@@ -5,6 +5,7 @@
 @import './CSS/chat.css';
 @import './CSS/transcript.css';
 @import './CSS/pages.css';
+@import './CSS/badges.css';
 
 /* Main Container */
 .main-container {
@@ -198,24 +199,6 @@
   min-height: 525px; /* Fixed height to prevent layout shifts */
   flex-shrink: 0;
   position: relative; /* Contain the chat */
-}
-
-/* Bottom Section */
-.bottom-section {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  padding: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  text-align: center;
-  flex-shrink: 0;
-}
-
-.accolades-text {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
-  font-style: italic;
-  font-family: 'Inter', sans-serif;
 }
 
 /* Responsive Design */

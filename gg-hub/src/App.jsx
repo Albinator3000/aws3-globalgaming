@@ -1,9 +1,10 @@
-// src/App.jsx - Updated to pass stream status to chat
+// src/App.jsx - Updated with Badge System and Comment Tracking
 import { useState, useCallback } from 'react'
 import './App.css'
 import IVSPlayer from './components/IVSPlayer'
 import LiveChat from './components/LiveChat'
 import TranscriptViewer from './components/TranscriptViewer'
+import BadgeSystem from './components/BadgeSystem'
 
 function App() {
   const [currentPage, setCurrentPage] = useState('stream'); // 'stream', 'vods', 'about'
@@ -12,6 +13,7 @@ function App() {
     isLoading: true,
     error: null
   });
+  const [userCommentCount, setUserCommentCount] = useState(0);
 
   // Your stream URL and ID from the ivsstreamdetails.js file
   const streamUrl = "https://6376322642cf.us-west-2.playback.live-video.net/api/video/v1/us-west-2.251394915937.channel.aVHZaA2R5mCI.m3u8";
@@ -21,6 +23,11 @@ function App() {
   const handleStatusChange = useCallback((status) => {
     setStreamStatus(status);
     console.log("🔄 Stream status changed:", status);
+  }, []);
+
+  // Callback to handle when user makes a comment
+  const handleUserComment = useCallback(() => {
+    setUserCommentCount(prev => prev + 1);
   }, []);
 
   const renderCurrentPage = () => {
@@ -87,18 +94,12 @@ function App() {
           <LiveChat 
             streamId={streamId} 
             isLive={streamStatus.isLive}
+            onUserComment={handleUserComment}
           />
         </div>
 
-        {/* Bottom Section */}
-        <div className="bottom-section">
-          <div className="accolades-text">
-            {streamStatus.isLive 
-              ? "Session-based chat • Messages saved per stream session"
-              : "Stream offline • Chat will appear when live"
-            }
-          </div>
-        </div>
+        {/* Badge System - replaces Bottom Section */}
+        <BadgeSystem userCommentCount={userCommentCount} />
       </div>
     </div>
   );
@@ -205,6 +206,21 @@ function App() {
             <li>Smart error recovery and reconnection</li>
             <li>Real-time viewer count and engagement metrics</li>
             <li>Scalable AWS infrastructure</li>
+          </ul>
+        </div>
+
+        <div className="about-section">
+          <h2>Badge System</h2>
+          <p>
+            Earn badges by participating in chat! Start as a "Newcomer" and work your way up to "Legend" status.
+          </p>
+          <ul>
+            <li><strong>🥉 Newcomer:</strong> Welcome to GlobalGaming!</li>
+            <li><strong>💬 Chatter:</strong> Made your first comment!</li>
+            <li><strong>🗣️ Active Voice:</strong> 2+ comments - Getting engaged!</li>
+            <li><strong>👥 Community Member:</strong> 3+ comments - Valued member!</li>
+            <li><strong>🏆 Chat Champion:</strong> 4+ comments - Part of the conversation!</li>
+            <li><strong>⭐ Legend:</strong> 5+ comments - True GlobalGaming legend!</li>
           </ul>
         </div>
 
