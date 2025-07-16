@@ -1,4 +1,4 @@
-// src/components/BadgeSystem.jsx - Updated with collapsible dropdown
+// src/components/BadgeSystem.jsx - Fixed with download functionality
 import { useState, useEffect } from 'react';
 
 const BadgeSystem = ({ userCommentCount = 0 }) => {
@@ -6,6 +6,8 @@ const BadgeSystem = ({ userCommentCount = 0 }) => {
   const [nextBadge, setNextBadge] = useState(null);
   const [commentsToNext, setCommentsToNext] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [imageErrors, setImageErrors] = useState({});
 
   // Badge configuration
   const badges = [
@@ -91,6 +93,80 @@ const BadgeSystem = ({ userCommentCount = 0 }) => {
     return Math.min((currentProgress / totalNeeded) * 100, 100);
   };
 
+  // Download badge function - restored from your old version
+  const downloadBadge = async (badge) => {
+    if (!badge) return;
+    
+    setIsDownloading(true);
+    
+    try {
+      const imageUrl = getBadgeImageUrl(badge.fileName);
+      const fileName = `GlobalGaming_Level${badge.id}_${badge.name.replace(' ', '_')}_Badge.png`;
+      
+      console.log(`🔄 Attempting to download badge: ${fileName}`);
+      console.log(`📡 Image URL: ${imageUrl}`);
+      
+      try {
+        // Try to fetch the image first
+        const response = await fetch(imageUrl, {
+          method: 'GET',
+          mode: 'cors'
+        });
+        
+        if (response.ok) {
+          // If fetch succeeds, create blob and download
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          window.URL.revokeObjectURL(url);
+          console.log(`✅ Badge downloaded successfully: ${fileName}`);
+          
+        } else {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+      } catch (corsError) {
+        console.warn('🔄 CORS download failed, trying direct link method:', corsError.message);
+        
+        // Fallback: Open in new tab for manual download
+        const link = document.createElement('a');
+        link.href = imageUrl;
+        link.download = fileName;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        console.log(`✅ Badge opened for download: ${fileName}`);
+      }
+      
+    } catch (error) {
+      console.error('❌ Error downloading badge:', error);
+      
+      // Final fallback: just open the image URL
+      window.open(getBadgeImageUrl(badge.fileName), '_blank');
+      console.log(`⚠️ Opened badge image in new tab as fallback`);
+      
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  // Handle image load errors
+  const handleImageError = (badgeId) => {
+    console.warn(`⚠️ Image failed to load for badge ${badgeId}`);
+    setImageErrors(prev => ({ ...prev, [badgeId]: true }));
+  };
+
   if (!currentBadge) return null;
 
   return (
@@ -123,6 +199,7 @@ const BadgeSystem = ({ userCommentCount = 0 }) => {
                 border: `3px solid #F4A261`,
                 boxShadow: `0 0 15px #F4A26140`
               }}
+              onError={() => handleImageError(currentBadge.id)}
             />
             {userCommentCount > 0 && (
               <div style={{
@@ -182,14 +259,13 @@ const BadgeSystem = ({ userCommentCount = 0 }) => {
               marginBottom: '0.25rem'
             }}>
               LVL.{currentBadge.id}
-               {/* • {userCommentCount} comments */}
             </div>
             {nextBadge && (
               <div style={{ 
                 fontSize: '0.8rem', 
                 color: 'rgba(255, 255, 255, 0.6)'
               }}>
-                {/* {commentsToNext}/1 comments to next badge */}
+                {/* Progress info */}
               </div>
             )}
             {!nextBadge && (
@@ -242,6 +318,7 @@ const BadgeSystem = ({ userCommentCount = 0 }) => {
                     borderRadius: '50%',
                     opacity: 0.7
                   }}
+                  onError={() => handleImageError(nextBadge.id)}
                 />
               </div>
               
@@ -319,23 +396,21 @@ const BadgeSystem = ({ userCommentCount = 0 }) => {
                       position: 'relative'
                     }}
                     onClick={() => {
-                      if (isEarned) {
-                        const link = document.createElement('a');
-                        link.href = getBadgeImageUrl(badge.fileName);
-                        link.download = `${badge.name.toLowerCase().replace(' ', '_')}_badge.png`;
-                        link.click();
+                      if (isEarned && !isDownloading) {
+                        downloadBadge(badge);
                       }
                     }}
                     onMouseEnter={(e) => {
                       if (isEarned) {
-                        e.target.style.transform = 'scale(1.05)';
-                        e.target.style.boxShadow = `0 5px 15px ${badge.color}40`;
+                        e.currentTarget.style.transform = 'scale(1.05)';
+                        e.currentTarget.style.boxShadow = `0 5px 15px ${badge.color}40`;
                       }
                     }}
                     onMouseLeave={(e) => {
-                      e.target.style.transform = 'scale(1)';
-                      e.target.style.boxShadow = 'none';
+                      e.currentTarget.style.transform = 'scale(1)';
+                      e.currentTarget.style.boxShadow = 'none';
                     }}
+                    title={isEarned ? `Click to download ${badge.name} badge` : `Locked: Need ${badge.requiredComments} comments`}
                   >
                     {isCurrentBadge && (
                       <div style={{
@@ -355,6 +430,26 @@ const BadgeSystem = ({ userCommentCount = 0 }) => {
                       </div>
                     )}
                     
+                    {isDownloading && isEarned && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        background: 'rgba(0, 0, 0, 0.8)',
+                        borderRadius: '50%',
+                        width: '30px',
+                        height: '30px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '0.8rem',
+                        zIndex: 1
+                      }}>
+                        ⏳
+                      </div>
+                    )}
+                    
                     <img
                       src={getBadgeImageUrl(badge.fileName)}
                       alt={badge.name}
@@ -366,6 +461,7 @@ const BadgeSystem = ({ userCommentCount = 0 }) => {
                         opacity: isEarned ? 1 : 0.3,
                         filter: isEarned ? 'none' : 'grayscale(100%)'
                       }}
+                      onError={() => handleImageError(badge.id)}
                     />
                     
                     <div style={{
