@@ -1,8 +1,13 @@
-// src/components/LiveChat.jsx - Final version with comment tracking
+// src/components/LiveChat.jsx - Updated with session callback for AI metrics
 import { useState, useEffect, useRef } from 'react';
 import ChatService from '../services/chatService';
 
-const LiveChat = ({ streamId = "aVHZaA2R5mCI", isLive = false, onUserComment = () => {} }) => {
+const LiveChat = ({ 
+  streamId = "aVHZaA2R5mCI", 
+  isLive = false, 
+  onUserComment = () => {},
+  onSessionUpdate = () => {} // New callback for session updates
+}) => {
   const [messages, setMessages] = useState([]);
   const [currentMessage, setCurrentMessage] = useState("");
   const [onlineCount, setOnlineCount] = useState(42);
@@ -21,11 +26,14 @@ const LiveChat = ({ streamId = "aVHZaA2R5mCI", isLive = false, onUserComment = (
       const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       setCurrentSessionId(newSessionId);
       
+      // Notify parent component about new session
+      onSessionUpdate(newSessionId);
+      
       // Show welcome banner at top
       const welcomeMessage = {
         id: `welcome_${newSessionId}`,
         username: "StreamMaster",
-        content: "🎮 Welcome to GlobalGaming! Stream is now LIVE!",
+        content: "🎮 Welcome to GlobalGaming! Stream is now LIVE! AI analytics are active.",
         timestamp: new Date(),
         badges: ["mod"],
         isSystem: true,
@@ -48,11 +56,14 @@ const LiveChat = ({ streamId = "aVHZaA2R5mCI", isLive = false, onUserComment = (
       setCurrentSessionId(null);
       setSessionStats({ totalMessages: 0 });
       
+      // Notify parent that session ended
+      onSessionUpdate(null);
+      
       console.log(`🔴 Stream went OFFLINE - Messages cleared`);
     }
     
     lastStreamStateRef.current = isLive;
-  }, [isLive, streamId]);
+  }, [isLive, streamId, onSessionUpdate]);
 
   // Load session messages when stream is live
   useEffect(() => {
@@ -69,7 +80,7 @@ const LiveChat = ({ streamId = "aVHZaA2R5mCI", isLive = false, onUserComment = (
         const welcomeMessage = {
           id: `welcome_${currentSessionId}`,
           username: "StreamMaster",
-          content: "🎮 Welcome to GlobalGaming! Stream is now LIVE!",
+          content: "🎮 Welcome to GlobalGaming! Stream is now LIVE! AI analytics are active.",
           timestamp: new Date(),
           badges: ["mod"],
           isSystem: true,
@@ -104,8 +115,21 @@ const LiveChat = ({ streamId = "aVHZaA2R5mCI", isLive = false, onUserComment = (
     if (isLive && currentSessionId) {
       randomMessageIntervalRef.current = setInterval(async () => {
         const demoMessages = [
-          "This is so exciting!",
-          "Great gameplay! 🎮",
+          "This AI analysis is so cool! 🤖",
+          "Love the real-time sentiment tracking!",
+          "The engagement metrics are fascinating",
+          "Amazing how Bedrock analyzes our chat",
+          "This platform is next level! 🔥",
+          "Great tournament stream quality",
+          "The badge system is addictive!",
+          "AI recommendations actually helpful",
+          "CloudFront delivery is lightning fast ⚡",
+          "DynamoDB session tracking works perfectly",
+          "Bedrock sentiment analysis on point 🎯",
+          "AWS infrastructure is solid",
+          "Real-time analytics during live stream!",
+          "This is the future of esports streaming",
+          "Amazing gameplay! 🎮",
           "When does the next match start?",
           "The graphics are incredible",
           "Go team blue! 💙",
@@ -114,25 +138,26 @@ const LiveChat = ({ streamId = "aVHZaA2R5mCI", isLive = false, onUserComment = (
           "Love the camera angles 📹",
           "Who's your favorite player?",
           "This tournament is epic! 🏆",
-          "Amazing stream quality!",
           "Can't wait for the finals!",
           "Such good commentary",
           "This game is intense! 🔥"
         ];
 
         const demoUsers = [
+          "AIEnthusiast", "TechStreamer", "DataLover", "CloudGamer", "BedrockFan",
+          "AnalyticsNerd", "AWSUser", "StreamTech", "EsportsAI", "DevOpsGamer",
+          "MLFanatic", "CloudArchitect", "DataStreamer", "AIGamer2025",
           "GamerX", "StreamFan", "EsportsLover", "ProPlayer", "TournamentWatcher",
-          "GameMaster", "StreamViewer", "EpicGamer", "ChatModerator", "FanBoy2025",
-          "ESportsKing", "GameChampion", "StreamAddict", "TourneyFan"
+          "GameMaster", "StreamViewer", "EpicGamer", "ChatModerator", "FanBoy2025"
         ];
 
-        if (Math.random() > 0.65) { // 35% chance every 4 seconds
+        if (Math.random() > 0.6) { // 40% chance every 4 seconds
           const newMessage = {
             id: `demo_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
             username: demoUsers[Math.floor(Math.random() * demoUsers.length)],
             content: demoMessages[Math.floor(Math.random() * demoMessages.length)],
             timestamp: new Date(),
-            badges: Math.random() > 0.85 ? ["sub"] : [],
+            badges: Math.random() > 0.8 ? ["sub"] : [],
             sessionId: currentSessionId
           };
 
@@ -274,12 +299,12 @@ const LiveChat = ({ streamId = "aVHZaA2R5mCI", isLive = false, onUserComment = (
             color: 'rgba(255, 255, 255, 0.6)',
             padding: '2rem'
           }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>GG</div>
-            <div style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>GG Chat</div>
+            {/* <div style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>
               Stream is offline
-            </div>
+            </div> */}
             <div style={{ fontSize: '0.9rem' }}>
-              Chat will appear when the stream goes live
+              Chat will activate when stream goes live
             </div>
           </div>
         </div>
@@ -325,7 +350,7 @@ const LiveChat = ({ streamId = "aVHZaA2R5mCI", isLive = false, onUserComment = (
           color: '#10b981',
           textAlign: 'center'
         }}>
-          🎥 Live Session • {sessionStats.totalMessages} messages this stream
+          🎥 Live Session • {sessionStats.totalMessages} messages • 🤖 AI Active
         </div>
       )}
 
