@@ -224,7 +224,7 @@ const AIMetricsWidget = ({ streamId, currentSessionId, isLive, isExpanded, onTog
         onClick={onToggle}
       >
         <span>
-          🤖 AI Stream Analytics • 
+          AI Stream Analytics • 
           <span style={{ color: sentimentDisplay.color, marginLeft: '0.5rem' }}>
             {sentimentDisplay.emoji} {sentimentDisplay.label}
           </span>
