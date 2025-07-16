@@ -1,10 +1,11 @@
-// src/App.jsx - Updated with Badge System and Comment Tracking
+// src/App.jsx - Updated with AI Metrics Widget
 import { useState, useCallback } from 'react'
 import './App.css'
 import IVSPlayer from './components/IVSPlayer'
 import LiveChat from './components/LiveChat'
 import TranscriptViewer from './components/TranscriptViewer'
 import BadgeSystem from './components/BadgeSystem'
+import AIMetricsWidget from './components/AIMetricsWidget'
 
 function App() {
   const [currentPage, setCurrentPage] = useState('stream'); // 'stream', 'vods', 'about'
@@ -14,6 +15,8 @@ function App() {
     error: null
   });
   const [userCommentCount, setUserCommentCount] = useState(0);
+  const [currentSessionId, setCurrentSessionId] = useState(null);
+  const [aiMetricsExpanded, setAIMetricsExpanded] = useState(true); // Start expanded for demo
 
   // Your stream URL and ID from the ivsstreamdetails.js file
   const streamUrl = "https://6376322642cf.us-west-2.playback.live-video.net/api/video/v1/us-west-2.251394915937.channel.aVHZaA2R5mCI.m3u8";
@@ -28,6 +31,12 @@ function App() {
   // Callback to handle when user makes a comment
   const handleUserComment = useCallback(() => {
     setUserCommentCount(prev => prev + 1);
+  }, []);
+
+  // Handle session ID updates from LiveChat
+  const handleSessionUpdate = useCallback((sessionId) => {
+    setCurrentSessionId(sessionId);
+    console.log("📺 Session updated:", sessionId);
   }, []);
 
   const renderCurrentPage = () => {
@@ -71,18 +80,23 @@ function App() {
             <span>Stream ID: {streamId}</span>
             <span>Chat: Session-based DynamoDB</span>
             <span>Status: {streamStatus.isLive ? '🟢 Live' : '🔴 Offline'}</span>
+            {streamStatus.isLive && currentSessionId && (
+              <span>Session: {currentSessionId.slice(-8)}</span>
+            )}
             {streamStatus.isLive && (
-              <span>Session Active</span>
+              <span>AI Analytics: Active</span>
             )}
           </div>
         </div>
 
-        {/* Stream Details Dropdown */}
-        <div className="stream-details">
-          <div className="dropdown-header">
-            <span>Stream Details • Messages cleared when offline</span>
-          </div>
-        </div>
+        {/* AI Metrics Widget - Replaces the old Stream Details Dropdown */}
+        <AIMetricsWidget 
+          streamId={streamId}
+          currentSessionId={currentSessionId}
+          isLive={streamStatus.isLive}
+          isExpanded={aiMetricsExpanded}
+          onToggle={() => setAIMetricsExpanded(prev => !prev)}
+        />
       </div>
       
       {/* Right Side - Chat with session management */}
@@ -95,10 +109,11 @@ function App() {
             streamId={streamId} 
             isLive={streamStatus.isLive}
             onUserComment={handleUserComment}
+            onSessionUpdate={handleSessionUpdate}
           />
         </div>
 
-        {/* Badge System - replaces Bottom Section */}
+        {/* Badge System */}
         <BadgeSystem userCommentCount={userCommentCount} />
       </div>
     </div>
@@ -164,7 +179,7 @@ function App() {
     <div className="about-page">
       <div className="page-header">
         <h1 className="page-title">🎮 About GlobalGaming</h1>
-        <p className="page-description">Building the future of esports streaming with session-based chat</p>
+        <p className="page-description">Building the future of esports streaming with AI-powered analytics</p>
       </div>
       
       <div className="about-content">
@@ -182,8 +197,24 @@ function App() {
           <p>
             Built with cutting-edge technology including Amazon IVS for ultra-low latency 
             streaming (3-5 second delay), React for responsive user interfaces, AWS DynamoDB 
-            for session-based chat storage, and AWS infrastructure for global scalability.
+            for session-based chat storage, AWS Bedrock for AI-powered analytics, and AWS 
+            infrastructure for global scalability.
           </p>
+        </div>
+
+        <div className="about-section">
+          <h2>🤖 AI-Powered Analytics</h2>
+          <p>
+            Our platform features real-time AI analysis powered by AWS Bedrock and Claude 3 Haiku:
+          </p>
+          <ul>
+            <li>🎭 <strong>Sentiment Analysis:</strong> Real-time mood tracking of chat conversations</li>
+            <li>📊 <strong>Engagement Metrics:</strong> AI-driven insights into viewer participation</li>
+            <li>🏷️ <strong>Topic Detection:</strong> Automatic identification of trending discussion topics</li>
+            <li>🏆 <strong>Badge Analytics:</strong> Community health scoring based on user progression</li>
+            <li>💡 <strong>Actionable Recommendations:</strong> AI suggestions for improving stream engagement</li>
+            <li>⚡ <strong>Session-Based Analysis:</strong> Analytics reset with each new stream session</li>
+          </ul>
         </div>
         
         <div className="about-section">
@@ -195,6 +226,7 @@ function App() {
             <li>📱 Mobile-responsive design with smooth animations</li>
             <li>🏷️ User badges and role management</li>
             <li>🌍 Multi-language support ready</li>
+            <li>🤖 AI-powered chat analysis and insights</li>
           </ul>
         </div>
 
@@ -205,6 +237,7 @@ function App() {
             <li>Automatic quality adaptation</li>
             <li>Smart error recovery and reconnection</li>
             <li>Real-time viewer count and engagement metrics</li>
+            <li>AI-powered chat sentiment analysis</li>
             <li>Scalable AWS infrastructure</li>
           </ul>
         </div>
@@ -213,6 +246,7 @@ function App() {
           <h2>Badge System</h2>
           <p>
             Earn badges by participating in chat! Start as a "Newcomer" and work your way up to "Legend" status.
+            Our AI tracks badge distribution and provides insights into community health.
           </p>
           <ul>
             <li><strong>🥉 Newcomer:</strong> Welcome to GlobalGaming!</li>
@@ -221,6 +255,21 @@ function App() {
             <li><strong>👥 Community Member:</strong> 3+ comments - Valued member!</li>
             <li><strong>🏆 Chat Champion:</strong> 4+ comments - Part of the conversation!</li>
             <li><strong>⭐ Legend:</strong> 5+ comments - True GlobalGaming legend!</li>
+          </ul>
+        </div>
+
+        <div className="about-section">
+          <h2>AWS Architecture</h2>
+          <p>
+            Our platform leverages multiple AWS services for optimal performance:
+          </p>
+          <ul>
+            <li><strong>Amazon IVS:</strong> Ultra-low latency video streaming</li>
+            <li><strong>DynamoDB:</strong> Session-based chat storage with TTL</li>
+            <li><strong>AWS Bedrock:</strong> AI-powered sentiment analysis and insights</li>
+            <li><strong>CloudFront:</strong> Global CDN for badge assets</li>
+            <li><strong>S3:</strong> Static asset storage</li>
+            <li><strong>AWS Amplify:</strong> Hosting and deployment</li>
           </ul>
         </div>
 
@@ -234,6 +283,7 @@ function App() {
             <li><strong>Sort Key:</strong> MessageId (String) - Unique message identifier</li>
             <li><strong>Session Tracking:</strong> SessionId field tracks individual stream sessions</li>
             <li><strong>Auto Cleanup:</strong> TTL automatically removes messages after 7 days</li>
+            <li><strong>AI Analytics:</strong> Messages processed by Bedrock for real-time insights</li>
           </ul>
         </div>
       </div>
